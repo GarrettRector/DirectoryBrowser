@@ -19,7 +19,7 @@ function promptUser() {
 }
 
 async function scanDirectory(userInput) {
-    const path = userInput.trim().toLowerCase();
+    let path = userInput.trim().toLowerCase();
     const goUp = path === "up";
     currentDirectory = resolve(currentDirectory, goUp ? ".." : path);
 
@@ -36,17 +36,13 @@ async function scanDirectory(userInput) {
             files.forEach(function (file) {
                 let stats = fs.statSync(paths.join(currentDirectory, file));
                 let isfile;
-                if (stats.isFile()) {
-                    isfile = "File";
-                } else {
-                    isfile = "Directory";
-                }
+                if (stats.isFile()) { isfile = "File"; } else { isfile = "Directory"; }
                 console.log(`|\n| - ${file} (${isfile})`);
             });
             promptUser();
         }
     } catch (error) {
-        console.log(`Directory "${userInput}" does not exist! error: ${error}`);
+        console.log(`Directory "${userInput}" does not exist!`);
         return readline.close();
     }
 }
