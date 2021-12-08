@@ -1,0 +1,7 @@
+{
+  "name": "DirectoryBrowser",
+  "version": "1.0.0",
+  "dependencies": {
+    "console-read-write": "^0.1.1"
+  }
+}
