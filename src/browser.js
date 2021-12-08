@@ -24,20 +24,29 @@ async function scanDirectory(userInput) {
     currentDirectory = resolve(currentDirectory, goUp ? ".." : path);
 
     try {
-        const files = await readdir(currentDirectory);
-        files.forEach(function (file) {
-            let stats = fs.statSync(paths.join(currentDirectory, file));
-            let isfile;
-            if (stats.isFile()) {
-                isfile = "File";
-            } else {
-                isfile = "Directory";
-            }
-            console.log(`|\n| - ${file} (${isfile})`);
-        });
-        promptUser();
+        if (fs.statSync(paths.join(currentDirectory)).isFile()) {
+            fs.readFile(currentDirectory, (err, data) => {
+                if (err) throw err
+
+                console.log(data.toString())
+                promptUser();
+            })
+        } else {
+            const files = await readdir(currentDirectory);
+            files.forEach(function (file) {
+                let stats = fs.statSync(paths.join(currentDirectory, file));
+                let isfile;
+                if (stats.isFile()) {
+                    isfile = "File";
+                } else {
+                    isfile = "Directory";
+                }
+                console.log(`|\n| - ${file} (${isfile})`);
+            });
+            promptUser();
+        }
     } catch (error) {
-        console.log(`Directory "${userInput}" does not exist!`);
+        console.log(`Directory "${userInput}" does not exist! error: ${error}`);
         return readline.close();
     }
 }
